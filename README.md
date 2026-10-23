@@ -1,6 +1,6 @@
 # BibliotecaTQS
 Trabalho de Qualidade de Software
-
+..
 Requisitos do Sistema ENUNCIADO DE TRABALHO:
 Menus de Navegação
 O sistema deve possuir menus claros e organizados para facilitar a navegação do usuário.
