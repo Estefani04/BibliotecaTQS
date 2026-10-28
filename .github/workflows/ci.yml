@@ -10,6 +10,21 @@ jobs:
     name: Build, Analise e Testes
     runs-on: ubuntu-latest
 
+    # Banco MySQL descartavel usado pelos testes de integracao.
+    # Sem senha: o container so existe durante este job (nenhum segredo no repo).
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
     steps:
       - name: Baixar o codigo
         uses: actions/checkout@v4
@@ -36,10 +51,21 @@ jobs:
       - name: "Gate 2 - Analise estatica (PHPStan)"
         run: vendor/bin/phpstan analyse --no-progress
 
+      - name: Criar o banco de teste (importa bibliotecaV2.sql)
+        run: mysql -h 127.0.0.1 -P 3306 -u root < bibliotecaV2.sql
+
       # ---------------- QUALITY GATE 3: Testes ----------------------
-      # Risco controlado: regressao em comportamento critico (ex.: calculo de multa).
+      # Risco controlado: regressao em comportamento critico (multa, pesquisa,
+      # ordenacao) e falhas na integracao PHP + MySQL.
       # Consequencia: BLOQUEIA o pipeline.
-      - name: "Gate 3 - Testes automatizados (PHPUnit)"
+      - name: "Gate 3 - Testes automatizados (PHPUnit: unitarios + integracao)"
+        env:
+          TESTES_INTEGRACAO: "1"
+          DB_HOST: 127.0.0.1
+          DB_PORT: "3306"
+          DB_USER: root
+          DB_PASS: ""
+          DB_NAME: biblioteca
         run: vendor/bin/phpunit --log-junit relatorio-testes.xml
 
       # ---------------- Evidencia: publica o relatorio --------------
