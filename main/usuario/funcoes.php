@@ -2,65 +2,37 @@
 // Inclui arquivo que gera a conexão
 include "../conexao.php";
 
+// Regras de pesquisa/ordenação (testadas automaticamente em tests/)
+require_once __DIR__ . "/../../src/Pesquisa.php";
+
+use App\Pesquisa;
+
 /**
  * Filtra uma tabela (array) por busca textual
  */
 function pesquisa($tabela, $coluna, $valor){
-
-    $tabela_filtrada = [];
-
-    // Percorre cada linha da tabela
-    foreach($tabela as $linha){
-
-        // Busca parcial (case insensitive)
-        if(str_contains(
-            strtolower(trim($linha[$coluna])),
-            strtolower(trim($valor))
-        )){
-            $tabela_filtrada[] = $linha;
-        }
-    }
-
-    return $tabela_filtrada;
+    return Pesquisa::filtrar($tabela, (string) $coluna, (string) $valor);
 }
 
 /**
  * Ordena tabela em ordem crescente por coluna
  */
 function ordenaCrescente($tabela, string $coluna){
-
-    usort($tabela, function($a, $b) use ($coluna) {
-        return $a[$coluna] <=> $b[$coluna];
-    });
-
-    return $tabela;
+    return Pesquisa::ordenarCrescente($tabela, $coluna);
 }
 
 /**
  * Ordena tabela em ordem decrescente por coluna
  */
 function ordenaDecrescente($tabela, string $coluna){
-
-    usort($tabela, function($a, $b) use ($coluna) {
-        return $b[$coluna] <=> $a[$coluna];
-    });
-
-    return $tabela;
+    return Pesquisa::ordenarDecrescente($tabela, $coluna);
 }
 
 /**
  * Gera mensagem de retorno para pesquisas
  */
 function mensagem_pesquisa($objeto,$pesquisa, $num_linhas){
-
-    if($num_linhas < 1){
-        $mensagem = "<strong> Não escontramos nenhum Livro com esse(a) $objeto.</strong> Vamos tentar outro(a) $objeto?";
-    }
-    else {
-        $mensagem = "Todos os resultados da pesquisa de '$pesquisa' em $objeto. <br><br>";
-    }
-    
-    return $mensagem;
+    return Pesquisa::mensagem((string) $objeto, (string) $pesquisa, (int) $num_linhas);
 }
 
 /**
