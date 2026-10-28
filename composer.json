@@ -21,7 +21,8 @@
         }
     },
     "scripts": {
-        "test": "phpunit",
+        "test": "phpunit --testsuite unitarios",
+        "test:integracao": "phpunit --testsuite integracao",
         "stan": "phpstan analyse"
     },
     "config": {

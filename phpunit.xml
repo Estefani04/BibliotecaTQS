@@ -9,6 +9,10 @@
     <testsuites>
         <testsuite name="unitarios">
             <directory>tests</directory>
+            <exclude>tests/Integracao</exclude>
+        </testsuite>
+        <testsuite name="integracao">
+            <directory>tests/Integracao</directory>
         </testsuite>
     </testsuites>
     <source>
