@@ -1,0 +1,444 @@
+/* =========================================================
+   Biblioteca — folha de estilo única do sistema
+   Visual minimalista: fundo claro, tipografia limpa,
+   cartões discretos e um único tom de destaque.
+   ========================================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
+
+:root {
+    --fundo: #f6f6f4;
+    --cartao: #ffffff;
+    --texto: #1f2328;
+    --texto-suave: #6b7076;
+    --borda: #e4e4e0;
+    --destaque: #2f5d50;
+    --destaque-hover: #24493f;
+    --destaque-claro: #e8f0ed;
+    --perigo: #b4443a;
+    --perigo-claro: #fbeceb;
+    --sucesso: #2f7a4f;
+    --sucesso-claro: #eaf5ee;
+    --raio: 10px;
+    --sombra: 0 1px 2px rgba(0, 0, 0, .04), 0 4px 16px rgba(0, 0, 0, .04);
+}
+
+/* ---------- Base ---------- */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    background: var(--fundo);
+}
+
+body {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 24px 20px 64px;
+    background: var(--fundo);
+    color: var(--texto);
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 32px 0 12px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+}
+
+h1 { font-size: 26px; }
+h2 { font-size: 22px; }
+h3 { font-size: 17px; }
+h5 { font-size: 14px; color: var(--sucesso); }
+
+h5:empty {
+    display: none;
+}
+
+p {
+    margin: 0 0 12px;
+}
+
+strong {
+    font-weight: 600;
+}
+
+a {
+    color: var(--destaque);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--borda);
+    margin: 20px 0;
+}
+
+hr.tracejado {
+    border-top-style: dashed;
+    margin: 12px 0;
+}
+
+/* ---------- Menu de navegação ---------- */
+
+.menu {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    margin: -24px -20px 24px;
+    padding: 14px 20px;
+    background: rgba(246, 246, 244, .92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--borda);
+}
+
+.menu form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+.menu .marca {
+    margin-right: auto;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+}
+
+.menu button {
+    margin: 0;
+    padding: 7px 12px;
+    background: transparent;
+    color: var(--texto-suave);
+    border: 0;
+    font-weight: 500;
+}
+
+.menu button:hover {
+    background: var(--destaque-claro);
+    color: var(--destaque);
+}
+
+.menu button[name="btn_logout"] {
+    margin-left: 8px;
+    border: 1px solid var(--borda);
+    color: var(--perigo);
+}
+
+.menu button[name="btn_logout"]:hover {
+    background: var(--perigo-claro);
+}
+
+/* ---------- Formulários ---------- */
+
+form {
+    margin: 0 0 20px;
+    padding: 24px;
+    background: var(--cartao);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+}
+
+/* Formulários que só contêm um botão de ação (ex.: "Novo Livro") */
+form[action] {
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]),
+select {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    margin: 6px 0 4px;
+    padding: 9px 12px;
+    background: var(--cartao);
+    color: var(--texto);
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    font: inherit;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--destaque);
+    box-shadow: 0 0 0 3px var(--destaque-claro);
+}
+
+input[type="radio"] {
+    accent-color: var(--destaque);
+    margin: 0 4px 0 0;
+    vertical-align: middle;
+}
+
+input[type="radio"] + label {
+    margin-right: 16px;
+    color: var(--texto-suave);
+    cursor: pointer;
+}
+
+label {
+    font-weight: 500;
+}
+
+/* ---------- Botões ---------- */
+
+button {
+    display: inline-block;
+    margin: 8px 6px 0 0;
+    padding: 9px 16px;
+    background: var(--destaque);
+    color: #fff;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s, color .15s, border-color .15s;
+}
+
+button:hover {
+    background: var(--destaque-hover);
+}
+
+/* Botões secundários: cancelar, voltar, limpar */
+button[type="button"],
+button[name="btn_cancelar"],
+button[name="btn_ver_dados"],
+button[name="btn_login"]:not(.principal) {
+    background: transparent;
+    color: var(--texto);
+    border-color: var(--borda);
+}
+
+button[type="button"]:hover,
+button[name="btn_cancelar"]:hover,
+button[name="btn_ver_dados"]:hover,
+button[name="btn_login"]:not(.principal):hover {
+    background: var(--fundo);
+}
+
+/* Ação destrutiva */
+button[name="btn_inativar"] {
+    background: transparent;
+    color: var(--perigo);
+    border-color: var(--perigo);
+}
+
+button[name="btn_inativar"]:hover {
+    background: var(--perigo-claro);
+}
+
+/* ---------- Tabelas ---------- */
+
+table {
+    width: 100%;
+    margin: 8px 0 24px;
+    border: 1px solid var(--borda);
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: var(--raio);
+    overflow: hidden;
+    background: var(--cartao);
+    box-shadow: var(--sombra);
+}
+
+th,
+td {
+    padding: 12px 16px;
+    border: 0;
+    border-bottom: 1px solid var(--borda);
+    text-align: left;
+}
+
+th {
+    background: #fafaf8;
+    color: var(--texto-suave);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+tr:last-child td {
+    border-bottom: 0;
+}
+
+tr:hover td {
+    background: #fafaf8;
+}
+
+/* ---------- Mensagens ---------- */
+
+p[style*="color:green"],
+p[style*="color:red"] {
+    max-width: 640px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+p[style*="color:green"] {
+    background: var(--sucesso-claro);
+    color: var(--sucesso) !important;
+    border: 1px solid #cfe7d8;
+}
+
+p[style*="color:red"] {
+    background: var(--perigo-claro);
+    color: var(--perigo) !important;
+    border: 1px solid #f1d0cd;
+}
+
+.mensagem {
+    color: var(--texto-suave);
+    font-size: 14px;
+}
+
+/* ---------- Listagens (acervo, histórico, multas) ---------- */
+
+.lista {
+    padding: 8px 24px 16px;
+    background: var(--cartao);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+}
+
+.lista:empty {
+    display: none;
+}
+
+h3 + hr {
+    display: none;
+}
+
+/* ---------- Relatório ---------- */
+
+.relatorio {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.relatorio p {
+    margin: 0;
+    padding: 18px 20px;
+    background: var(--cartao);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    color: var(--texto-suave);
+    font-size: 14px;
+}
+
+.relatorio p b {
+    display: block;
+    margin-top: 4px;
+    color: var(--texto);
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* ---------- Tela de login ---------- */
+
+body.pagina-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding-top: 0;
+    text-align: center;
+}
+
+body.pagina-login form {
+    width: 100%;
+    max-width: 380px;
+    padding: 36px 32px;
+    text-align: left;
+}
+
+body.pagina-login h1 {
+    margin-top: 0;
+    text-align: center;
+}
+
+body.pagina-login .subtitulo {
+    margin: -4px 0 24px;
+    color: var(--texto-suave);
+    text-align: center;
+    font-size: 14px;
+}
+
+body.pagina-login input:not([type="radio"]) {
+    max-width: none;
+    margin-bottom: 16px;
+}
+
+body.pagina-login .tipos {
+    margin: 4px 0 20px;
+}
+
+body.pagina-login button {
+    width: 100%;
+    margin: 0;
+}
+
+/* ---------- Responsivo ---------- */
+
+@media (max-width: 640px) {
+    body {
+        padding: 16px 16px 48px;
+    }
+
+    .menu {
+        margin: -16px -16px 16px;
+        padding: 12px 16px;
+    }
+
+    .menu .marca {
+        width: 100%;
+    }
+
+    form {
+        padding: 18px;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+/* Remove as quebras de linha extras deixadas após campos e listas */
+input + br,
+input + br + br,
+select + br,
+select + br + br,
+form > br,
+body > br {
+    display: none;
+}
