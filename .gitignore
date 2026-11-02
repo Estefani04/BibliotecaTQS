@@ -1,0 +1,13 @@
+# Dependencias instaladas pelo Composer (nunca vao pro repositorio)
+/vendor/
+
+# Segredos e configuracoes locais
+.env
+
+# Caches de ferramentas
+.phpunit.result.cache
+/.phpunit.cache/
+/.phpstan.cache/
+
+# Relatorios gerados pelo pipeline
+relatorio-testes.xml

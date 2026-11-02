@@ -1,0 +1,51 @@
+name: CI - Pipeline de Qualidade (QAOps)
+
+# Gatilhos: roda automaticamente a cada push e a cada pull request
+on:
+  push:
+  pull_request:
+
+jobs:
+  qualidade:
+    name: Build, Analise e Testes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer
+
+      - name: Instalar dependencias (Composer)
+        run: composer install --no-interaction --prefer-dist
+
+      # ---------------- QUALITY GATE 1: Build / Lint ----------------
+      # Risco controlado: codigo com erro de sintaxe que nao executa.
+      # Consequencia: BLOQUEIA o pipeline.
+      - name: "Gate 1 - Lint (sintaxe de todos os .php)"
+        run: find src tests -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+
+      # ---------------- QUALITY GATE 2: Analise estatica ------------
+      # Risco controlado: defeitos e padroes inseguros detectaveis sem executar.
+      # Consequencia: BLOQUEIA o pipeline.
+      - name: "Gate 2 - Analise estatica (PHPStan)"
+        run: vendor/bin/phpstan analyse --no-progress
+
+      # ---------------- QUALITY GATE 3: Testes ----------------------
+      # Risco controlado: regressao em comportamento critico (ex.: calculo de multa).
+      # Consequencia: BLOQUEIA o pipeline.
+      - name: "Gate 3 - Testes automatizados (PHPUnit)"
+        run: vendor/bin/phpunit --log-junit relatorio-testes.xml
+
+      # ---------------- Evidencia: publica o relatorio --------------
+      - name: Publicar relatorio de testes (artefato)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-testes
+          path: relatorio-testes.xml
