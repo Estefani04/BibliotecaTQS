@@ -30,16 +30,22 @@ jobs:
       - name: "Gate 1 - Lint (sintaxe de todos os .php)"
         run: find src tests -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
 
-      # ---------------- QUALITY GATE 2: Analise estatica ------------
+      # ---------------- QUALITY GATE 2: Auditoria de dependencias ----
+      # Risco controlado: dependencia com vulnerabilidade de seguranca conhecida.
+      # Consequencia: BLOQUEIA o pipeline.
+      - name: "Gate 2 - Auditoria de dependencias (composer audit)"
+        run: composer audit
+
+      # ---------------- QUALITY GATE 3: Analise estatica ------------
       # Risco controlado: defeitos e padroes inseguros detectaveis sem executar.
       # Consequencia: BLOQUEIA o pipeline.
-      - name: "Gate 2 - Analise estatica (PHPStan)"
+      - name: "Gate 3 - Analise estatica (PHPStan)"
         run: vendor/bin/phpstan analyse --no-progress
 
-      # ---------------- QUALITY GATE 3: Testes ----------------------
+      # ---------------- QUALITY GATE 4: Testes ----------------------
       # Risco controlado: regressao em comportamento critico (ex.: calculo de multa).
       # Consequencia: BLOQUEIA o pipeline.
-      - name: "Gate 3 - Testes automatizados (PHPUnit)"
+      - name: "Gate 4 - Testes automatizados (PHPUnit)"
         run: vendor/bin/phpunit --log-junit relatorio-testes.xml
 
       # ---------------- Evidencia: publica o relatorio --------------
