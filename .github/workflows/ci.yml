@@ -27,8 +27,10 @@ jobs:
       # ---------------- QUALITY GATE 1: Build / Lint ----------------
       # Risco controlado: codigo com erro de sintaxe que nao executa.
       # Consequencia: BLOQUEIA o pipeline.
+      # Lint cobre src/, tests/ e tambem o codigo do sistema em main/,
+      # excluindo a biblioteca de terceiros fpdf186 (nao e codigo nosso).
       - name: "Gate 1 - Lint (sintaxe de todos os .php)"
-        run: find src tests -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+        run: find src tests main -name '*.php' -not -path '*/fpdf186/*' -print0 | xargs -0 -n1 -P4 php -l
 
       # ---------------- QUALITY GATE 2: Auditoria de dependencias ----
       # Risco controlado: dependencia com vulnerabilidade de seguranca conhecida.
