@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Diagrama do pipeline</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 1600px; height: 580px; background: #fff; font-family: "Segoe UI", Calibri, sans-serif; color: #222; padding: 48px 56px; }
+  h1 { font-size: 34px; color: #2F5D50; }
+  .sub { font-size: 18px; color: #666; margin: 6px 0 36px; }
+  .fluxo { display: flex; align-items: stretch; gap: 0; }
+  .etapa { width: 160px; border-radius: 12px; padding: 16px 14px; text-align: center; border: 2px solid #c9d6d1; background: #f4f8f6; position: relative; }
+  .etapa .n { font-size: 13px; font-weight: 700; color: #888; letter-spacing: .5px; }
+  .etapa .t { font-size: 19px; font-weight: 700; margin: 6px 0 8px; }
+  .etapa .d { font-size: 13px; color: #444; line-height: 1.35; }
+  .gate { background: #2F5D50; border-color: #2F5D50; color: #fff; }
+  .gate .n, .gate .d { color: #d6e6e0; }
+  .fim { background: #e7f5ea; border-color: #3c9a55; }
+  .fim .t { color: #2e7d43; }
+  .seta { width: 26px; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #2F5D50; }
+  .falhas { display: flex; margin-top: 18px; }
+  .slot { width: 160px; display: flex; justify-content: center; }
+  .slot + .slot, .gap { margin-left: 26px; }
+  .baixo { font-size: 26px; color: #c0392b; text-align: center; }
+  .bloq { margin-top: 26px; border: 2px solid #c0392b; background: #fdecea; border-radius: 12px; padding: 16px 22px; display: flex; align-items: center; gap: 18px; }
+  .bloq .t { font-size: 22px; font-weight: 700; color: #c0392b; white-space: nowrap; }
+  .bloq .d { font-size: 16px; color: #5a2a25; line-height: 1.4; }
+  .legenda { margin-top: 30px; display: flex; gap: 34px; font-size: 15px; color: #555; }
+  .legenda span::before { content: ""; display: inline-block; width: 16px; height: 16px; border-radius: 4px; margin-right: 8px; vertical-align: -2px; }
+  .l1::before { background: #f4f8f6; border: 2px solid #c9d6d1; }
+  .l2::before { background: #2F5D50; }
+  .l3::before { background: #fdecea; border: 2px solid #c0392b; }
+</style>
+</head>
+<body>
+  <h1>Pipeline de qualidade: BibliotecaTQS</h1>
+  <p class="sub">GitHub Actions (.github/workflows/ci.yml) · roda automaticamente a cada push e pull request</p>
+
+  <div class="fluxo">
+    <div class="etapa"><div class="n">1 · GATILHO</div><div class="t">Push ou PR</div><div class="d">Alguém envia código para o GitHub</div></div>
+    <div class="seta">➜</div>
+    <div class="etapa"><div class="n">2 · PREPARO</div><div class="t">Dependências</div><div class="d">PHP 8.3 + composer install (PHPUnit, PHPStan)</div></div>
+    <div class="seta">➜</div>
+    <div class="etapa gate"><div class="n">GATE 1</div><div class="t">Lint</div><div class="d">php -l em src, tests e main<br>Zero erros de sintaxe</div></div>
+    <div class="seta">➜</div>
+    <div class="etapa gate"><div class="n">GATE 2</div><div class="t">Auditoria</div><div class="d">composer audit<br>Zero vulnerabilidades</div></div>
+    <div class="seta">➜</div>
+    <div class="etapa gate"><div class="n">GATE 3</div><div class="t">PHPStan</div><div class="d">Análise estática nível 5<br>Zero erros</div></div>
+    <div class="seta">➜</div>
+    <div class="etapa"><div class="n">3 · BANCO</div><div class="t">MySQL 8</div><div class="d">Container descartável + importa bibliotecaV2.sql</div></div>
+    <div class="seta">➜</div>
+    <div class="etapa gate"><div class="n">GATE 4</div><div class="t">PHPUnit</div><div class="d">22 unitários + 7 integração<br>Todos passam</div></div>
+    <div class="seta">➜</div>
+    <div class="etapa fim"><div class="n">4 · EVIDÊNCIA</div><div class="t">✔ Aprovado</div><div class="d">Publica o relatório JUnit (relatorio-testes)</div></div>
+  </div>
+
+  <div class="falhas">
+    <div class="slot"></div><div class="slot"></div>
+    <div class="slot baixo">✖ falhou ▼</div>
+    <div class="slot baixo">✖ falhou ▼</div>
+    <div class="slot baixo">✖ falhou ▼</div>
+    <div class="slot"></div>
+    <div class="slot baixo">✖ falhou ▼</div>
+  </div>
+
+  <div class="bloq">
+    <div class="t">✖ Pipeline bloqueado</div>
+    <div class="d">Se qualquer gate falha, a execução fica vermelha e os passos seguintes não rodam. O código não é aprovado.
+      O relatório de testes é publicado mesmo assim, para mostrar exatamente o que quebrou.</div>
+  </div>
+
+  <div class="legenda">
+    <span class="l1">Etapa de preparo</span>
+    <span class="l2">Quality gate (bloqueia se falhar)</span>
+    <span class="l3">Resultado quando um gate falha</span>
+  </div>
+</body>
+</html>
