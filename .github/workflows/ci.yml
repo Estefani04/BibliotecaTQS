@@ -42,23 +42,31 @@ jobs:
       # ---------------- QUALITY GATE 1: Build / Lint ----------------
       # Risco controlado: codigo com erro de sintaxe que nao executa.
       # Consequencia: BLOQUEIA o pipeline.
+      # Lint cobre src/, tests/ e tambem o codigo do sistema em main/,
+      # excluindo a biblioteca de terceiros fpdf186 (nao e codigo nosso).
       - name: "Gate 1 - Lint (sintaxe de todos os .php)"
-        run: find src tests -name '*.php' -print0 | xargs -0 -n1 -P4 php -l
+        run: find src tests main -name '*.php' -not -path '*/fpdf186/*' -print0 | xargs -0 -n1 -P4 php -l
 
-      # ---------------- QUALITY GATE 2: Analise estatica ------------
+      # ---------------- QUALITY GATE 2: Auditoria de dependencias ----
+      # Risco controlado: dependencia com vulnerabilidade de seguranca conhecida.
+      # Consequencia: BLOQUEIA o pipeline.
+      - name: "Gate 2 - Auditoria de dependencias (composer audit)"
+        run: composer audit
+
+      # ---------------- QUALITY GATE 3: Analise estatica ------------
       # Risco controlado: defeitos e padroes inseguros detectaveis sem executar.
       # Consequencia: BLOQUEIA o pipeline.
-      - name: "Gate 2 - Analise estatica (PHPStan)"
+      - name: "Gate 3 - Analise estatica (PHPStan)"
         run: vendor/bin/phpstan analyse --no-progress
 
       - name: Criar o banco de teste (importa bibliotecaV2.sql)
         run: mysql -h 127.0.0.1 -P 3306 -u root < bibliotecaV2.sql
 
-      # ---------------- QUALITY GATE 3: Testes ----------------------
+      # ---------------- QUALITY GATE 4: Testes ----------------------
       # Risco controlado: regressao em comportamento critico (multa, pesquisa,
       # ordenacao) e falhas na integracao PHP + MySQL.
       # Consequencia: BLOQUEIA o pipeline.
-      - name: "Gate 3 - Testes automatizados (PHPUnit: unitarios + integracao)"
+      - name: "Gate 4 - Testes automatizados (PHPUnit: unitarios + integracao)"
         env:
           TESTES_INTEGRACAO: "1"
           DB_HOST: 127.0.0.1

@@ -2,7 +2,7 @@
 
 Sistema web de biblioteca (PHP + MySQL) usado no trabalho prático de **DevOps/QAOps** da disciplina de Qualidade de Software.
 Usuários consultam o acervo, o histórico de retiradas e as multas; administradores cadastram livros, usuários e empréstimos.
-A cada `push` ou pull request, um pipeline no GitHub Actions verifica o código com três quality gates.
+A cada `push` ou pull request, um pipeline no GitHub Actions verifica o código com quatro quality gates.
 
 ## Estrutura
 
@@ -124,10 +124,10 @@ No CI isso é automático: o pipeline sobe um container MySQL descartável, impo
 Arquivo: `.github/workflows/ci.yml`. Roda a cada `push` e pull request:
 
 1. Instala o PHP 8.3 e as dependências (`composer install`).
-2. **Gate 1 – Lint:** `php -l` em todos os arquivos de `src/` e `tests/`. Pega erros de sintaxe.
-3. **Gate 2 – PHPStan:** análise estática nível 5. Pega defeitos sem executar o código.
-4. Sobe o MySQL de serviço e importa o `bibliotecaV2.sql`.
-5. **Gate 3 – PHPUnit:** testes unitários e de integração.
+2. **Gate 1 – Lint:** `php -l` em todos os arquivos de `src/`, `tests/` e `main/` (exceto a biblioteca `fpdf186`). Pega erros de sintaxe.
+3. **Gate 2 – Auditoria:** `composer audit`. Bloqueia se alguma dependência tiver vulnerabilidade conhecida.
+4. **Gate 3 – PHPStan:** análise estática nível 5. Pega defeitos sem executar o código.
+5. Sobe o MySQL de serviço, importa o `bibliotecaV2.sql` e roda o **Gate 4 – PHPUnit:** testes unitários e de integração.
 6. Publica o relatório JUnit (`relatorio-testes`) como artefato, mesmo se algo falhar.
 
 Se qualquer gate falha, o pipeline fica vermelho e os passos seguintes não rodam.
