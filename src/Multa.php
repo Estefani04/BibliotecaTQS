@@ -13,7 +13,7 @@ namespace App;
 final class Multa
 {
     /** Valor cobrado por dia de atraso (R$). */
-    public const VALOR_POR_DIA = 0.75;
+    public const VALOR_POR_DIA = 0.70;
 
     /**
      * Calcula o valor da multa a partir dos dias de atraso.
